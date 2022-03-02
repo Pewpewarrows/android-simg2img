@@ -337,6 +337,7 @@ static int write_sparse_skip_chunk(struct output_file* out, int64_t skip_len) {
   chunk_header.reserved1 = 0;
   chunk_header.chunk_sz = skip_len / out->block_size;
   chunk_header.total_sz = CHUNK_HEADER_LEN;
+  chunk_header.samsung_magic = SAMSUNG_CHUNK_MAGIC;
   ret = out->ops->write(out, &chunk_header, sizeof(chunk_header));
   if (ret < 0) return -1;
 
@@ -359,6 +360,7 @@ static int write_sparse_fill_chunk(struct output_file* out, unsigned int len, ui
   chunk_header.reserved1 = 0;
   chunk_header.chunk_sz = rnd_up_len / out->block_size;
   chunk_header.total_sz = CHUNK_HEADER_LEN + sizeof(fill_val);
+  chunk_header.samsung_magic = SAMSUNG_CHUNK_MAGIC;
   ret = out->ops->write(out, &chunk_header, sizeof(chunk_header));
 
   if (ret < 0) return -1;
@@ -390,6 +392,7 @@ static int write_sparse_data_chunk(struct output_file* out, unsigned int len, vo
   chunk_header.reserved1 = 0;
   chunk_header.chunk_sz = rnd_up_len / out->block_size;
   chunk_header.total_sz = CHUNK_HEADER_LEN + rnd_up_len;
+  chunk_header.samsung_magic = SAMSUNG_CHUNK_MAGIC;
   ret = out->ops->write(out, &chunk_header, sizeof(chunk_header));
 
   if (ret < 0) return -1;
